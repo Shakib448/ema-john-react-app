@@ -9,3 +9,21 @@
     color: blue;
     font-weight: 400;
 }
+
+svg:not(:root).svg-inline--fa {
+    overflow: visible;
+    margin-right: 5px;
+  }
+
+.add-to-cart{
+    background-color:#f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    color: #111;
+    width: 200px;
+    height: 26px;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    border-radius: 3px;
+    vertical-align: middle;
+}
