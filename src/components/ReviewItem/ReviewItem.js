@@ -7,7 +7,8 @@ const ReviewItem = (props) => {
     const reviewItemStyle = {
         borderBottom : '1px solid lightgray',
         marginBottom : '5px',
-        paddingBottom : '5px'
+        paddingBottom : '5px',
+        marginLeft : '200px'
     }
 
     return (
