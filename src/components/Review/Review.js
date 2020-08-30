@@ -3,7 +3,7 @@ import React from 'react'
 const Review = () => {
     return (
         <div>
-            I'm come from revies.js
+            <h1>I'm come from review.js</h1>
         </div>
     )
 }
