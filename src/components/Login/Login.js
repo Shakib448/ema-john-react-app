@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 
 import { UserContext } from '../../App';
 import { useHistory, useLocation } from 'react-router-dom';
-import { initializeLoginFrameworks, handleGoogleSignIn, handleSignOut } from './LoginManager';
+import { initializeLoginFrameworks, handleGoogleSignIn, handleSignOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './LoginManager';
 
 
 const Login = () => {
@@ -42,11 +42,22 @@ const Login = () => {
     const handleSubmit = (e) => {
 
         if (newUserInfo && user.email && user.password) {
-
+            // setUser(newUser)
+            createUserWithEmailAndPassword(user.name, user.email, user.password)// must maintain serialize
+                .then(res => {
+                    setUser(res)
+                    setLoggedInUser(res);
+                    history.replace(from);/// route
+                })
         }
 
         if (!newUserInfo && user.email && user.password) {
-
+            signInWithEmailAndPassword(user.email, user.password)
+                .then(res => {
+                    setUser(res)
+                    setLoggedInUser(res);
+                    history.replace(from);/// route
+                })
         }
         e.preventDefault();
     }
