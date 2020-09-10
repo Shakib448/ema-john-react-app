@@ -1,15 +1,30 @@
 import React, { useState, useContext } from 'react';
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import firebaseConfig from '../FirebaseConfig/Firebase.config';
+
 import { UserContext } from '../../App';
 import { useHistory, useLocation } from 'react-router-dom';
+import { initializeLoginFrameworks, handleGoogleSignIn, handleSignOut } from './LoginManager';
 
-firebase.initializeApp(firebaseConfig)
 
 const Login = () => {
 
-    const provider = new firebase.auth.GoogleAuthProvider();
+    initializeLoginFrameworks();
+
+    const googleSignIn = () => {
+        handleGoogleSignIn()
+            .then(res => {
+                setUser(res);
+                setLoggedInUser(res);
+                history.replace(from);/// route
+
+            })
+    }
+    const signOut = () => {
+        handleSignOut()
+            .then(res => {
+                setUser(res)
+                setLoggedInUser(res);
+            })
+    }
 
     const [newUserInfo, setNewUserInfo] = useState(false)
 
@@ -24,103 +39,16 @@ const Login = () => {
         error: ''
     })
 
-    const handleSingIn = async () => {
-
-        try {
-            const auth = await firebase.auth().signInWithPopup(provider);
-            const { displayName, photoURL, email } = auth.user;
-            console.log(displayName, email, photoURL);
-
-            const singedInUser = {
-                isSignedIn: true,
-                name: displayName,
-                email: email,
-                photo: photoURL,
-            }
-            setUser(singedInUser);
-
-        } catch (error) {
-            console.log(error);
-
-        }
-    }
-
-    // I delete the firebase app this is the method you can easily do that login and log out 
-
-    const handleSignOut = async () => {
-        try {
-            await firebase.auth().signOut()
-            const signOutUser = {
-                isSignedIn: false,
-                name: '',
-                email: '',
-                photo: '',
-                error: '',
-                success: false
-            }
-            setUser(signOutUser);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    // This method you have write this type 
     const handleSubmit = (e) => {
 
         if (newUserInfo && user.email && user.password) {
-            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-                .then(res => {
-                    const newUser = { ...user };
-                    newUser.error = ''
-                    newUser.success = true;
-                    setUser(newUser)
-                    console.log(res);
-                    updateUserName(user.name)
-                }).catch(error => {
-                    const newUser = { ...user };
-                    newUser.error = error.message;
-                    newUser.success = false;
-                    setUser(newUser)
-                })
+
         }
 
         if (!newUserInfo && user.email && user.password) {
-            firebase.auth().signInWithEmailAndPassword(user.email, user.password)
-                .then(res => {
-                    const newUser = { ...user };
-                    newUser.error = ''
-                    newUser.success = true;
-                    setUser(newUser)
-                    setLoggedInUser(newUser)
-                    history.replace(from);/// route
-                    console.log(res);
-                }).catch(error => {
-                    const newUser = { ...user };
-                    newUser.error = error.message;
-                    newUser.success = false;
-                    setUser(newUser)
-                })
 
         }
         e.preventDefault();
-    }
-
-    // let login = () => {
-    //     fakeAuth.authenticate(() => {
-    //         history.replace(from);
-    //     });
-    // };
-
-    const updateUserName = name => {
-        const user = firebase.auth().currentUser;
-
-        user.updateProfile({
-            displayName: name,
-        }).then(res => {
-            console.log("Update successful.")
-        }).catch(function (error) {
-            console.log("An error happened.")
-        });
     }
 
 
@@ -154,7 +82,7 @@ const Login = () => {
         <div style={{ textAlign: 'center' }}>
 
             {
-                user.isSignedIn ? <button onClick={handleSignOut}>Sign Out</button> : <button onClick={handleSingIn}>Sign In</button>
+                user.isSignedIn ? <button onClick={handleSignOut}>Sign Out</button> : <button onClick={googleSignIn}>Sign In</button>
             }
             {
                 user.isSignedIn && <div>
