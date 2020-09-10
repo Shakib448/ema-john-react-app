@@ -21,7 +21,7 @@ const Product = (props) => {
                     </small>
                 </p>
                 <p>
-                    <small>$ :{price}
+                    <small>${price}
                     </small>
                 </p>
                 <p>
