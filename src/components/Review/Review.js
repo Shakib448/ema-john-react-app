@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { getDatabaseCart, removeFromDatabaseCart, processOrder } from '../../utilities/databaseManager';
+import { getDatabaseCart, removeFromDatabaseCart } from '../../utilities/databaseManager';
 import fakeData from '../../fakeData';
 import ReviewItem from '../ReviewItem/ReviewItem';
 import './Review.css';
@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 const Review = () => {
 
     const [cart, setCart] = useState([]);
-    const [orderPlace, setOrderPlace] = useState(false);
+    const [orderPlace] = useState(false);
 
     const history = useHistory();
 

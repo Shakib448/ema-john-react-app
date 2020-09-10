@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import fakeData from '../../fakeData';
 import './Shop.css';
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
-import {addToDatabaseCart, getDatabaseCart} from '../../utilities/databaseManager';
-import {Link} from 'react-router-dom';
+import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
+import { Link } from 'react-router-dom';
 
 const Shop = () => {
     const first10 = fakeData.slice(0, 10);
@@ -59,7 +59,7 @@ const Shop = () => {
                     key={product.key}
                     showAddToCart={true}
                     handleAddProduct={handleAddProduct}></Product>)
-}
+                }
             </div>
             <div className="cart-container">
                 <Cart cart={cart}>
