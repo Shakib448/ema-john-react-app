@@ -9,20 +9,25 @@ const Login = () => {
 
     initializeLoginFrameworks();
 
+    const handelRes = (res, redirect) => {
+        setUser(res)
+        setLoggedInUser(res);
+        if (redirect) {
+            history.replace(from);/// route
+        }
+    }
+
+
     const googleSignIn = () => {
         handleGoogleSignIn()
             .then(res => {
-                setUser(res);
-                setLoggedInUser(res);
-                history.replace(from);/// route
-
+                handelRes(res, true);
             })
     }
     const signOut = () => {
         handleSignOut()
             .then(res => {
-                setUser(res)
-                setLoggedInUser(res);
+                handelRes(res, false);
             })
     }
 
@@ -45,22 +50,19 @@ const Login = () => {
             // setUser(newUser)
             createUserWithEmailAndPassword(user.name, user.email, user.password)// must maintain serialize
                 .then(res => {
-                    setUser(res)
-                    setLoggedInUser(res);
-                    history.replace(from);/// route
+                    handelRes(res, true);
                 })
         }
 
         if (!newUserInfo && user.email && user.password) {
             signInWithEmailAndPassword(user.email, user.password)
                 .then(res => {
-                    setUser(res)
-                    setLoggedInUser(res);
-                    history.replace(from);/// route
+                    handelRes(res, true);
                 })
         }
         e.preventDefault();
     }
+
 
 
     const handleChange = (e) => {
@@ -93,7 +95,7 @@ const Login = () => {
         <div style={{ textAlign: 'center' }}>
 
             {
-                user.isSignedIn ? <button onClick={handleSignOut}>Sign Out</button> : <button onClick={googleSignIn}>Sign In</button>
+                user.isSignedIn ? <button onClick={signOut}>Sign Out</button> : <button onClick={googleSignIn}>Sign In</button>
             }
             {
                 user.isSignedIn && <div>
