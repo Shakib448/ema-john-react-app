@@ -1,33 +1,63 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import './Shipment.css'
-import { UserContext } from '../../App';
-
-
+import "./Shipment.css";
+import { UserContext } from "../../App";
+import { getDatabaseCart } from "../../utilities/databaseManager";
 
 const Shipment = () => {
-    const { register, handleSubmit, watch, errors } = useForm();
-    const onSubmit = data => console.log(data);
+  const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+  console.log(loggedInUser);
 
-    const [loggedInUser, setLoggedInUser] = useContext(UserContext)
+  const { register, handleSubmit, watch, errors } = useForm();
+  const onSubmit = (data) => {
+    const savedCart = getDatabaseCart();
+    const orderDetails = {
+      ...loggedInUser,
+      products: savedCart,
+      shipment: data,
+      orderTime: new Date(),
+    };
+    console.log(orderDetails);
+    fetch("http://localhost:5000/addOrder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderDetails),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          alert("Your Order placed successfully");
+        }
+      });
+  };
 
-    console.log(watch("example")); // watch input value by passing the name of it
+  return (
+    <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
+      <input
+        name="name"
+        defaultValue={loggedInUser.name}
+        placeholder="Your name please"
+        ref={register({ required: true })}
+      />
+      {errors.name && <span className="error">Name is required</span>}
 
-    return (
-        < form className="ship-form" onSubmit={handleSubmit(onSubmit)} >
+      <input
+        defaultValue={loggedInUser.email}
+        name="email"
+        ref={register({ required: true })}
+      />
+      {errors.name && <span className="error">Email is required</span>}
 
-            < input name="name" defaultValue={loggedInUser.name} placeholder="Your name please" ref={register({ required: true })} />
-            {errors.name && <span className="error">Name is required</span>}
+      <input
+        placeholder="Your address"
+        name="address"
+        ref={register({ required: true })}
+      />
+      {errors.name && <span className="error">Address is required</span>}
 
-            < input defaultValue={loggedInUser.email} name="email" ref={register({ required: true })} />
-            {errors.name && <span className="error">Email is required</span>}
-
-            < input placeholder="Your address" name="address" ref={register({ required: true })} />
-            {errors.name && <span className="error">Address is required</span>}
-
-            <input type="submit" />
-        </form >
-    );
-}
+      <input type="submit" />
+    </form>
+  );
+};
 
 export default Shipment;
