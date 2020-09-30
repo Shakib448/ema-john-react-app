@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import "./Shipment.css";
 import { UserContext } from "../../App";
-import { getDatabaseCart } from "../../utilities/databaseManager";
+import { getDatabaseCart, processOrder } from "../../utilities/databaseManager";
 
 const Shipment = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -26,6 +26,7 @@ const Shipment = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
+          processOrder();
           alert("Your Order placed successfully");
         }
       });
