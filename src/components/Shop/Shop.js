@@ -13,11 +13,17 @@ const Shop = () => {
 
   const [cart, setCart] = useState([]);
 
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
   useEffect(() => {
-    fetch("https://sleepy-stream-14756.herokuapp.com/products")
+    fetch("https://sleepy-stream-14756.herokuapp.com/products?search=" + search)
       .then((res) => res.json())
       .then((data) => setProducts(data));
-  }, []);
+  }, [search]);
 
   useEffect(() => {
     const saveCart = getDatabaseCart();
@@ -53,6 +59,12 @@ const Shop = () => {
   return (
     <div className="twin-container">
       <div className="product-container">
+        <input
+          placeholder="Search...."
+          type="text"
+          onChange={handleSearch}
+          className="product-search"
+        />
         {products.map((product) => (
           <Product
             product={product}
