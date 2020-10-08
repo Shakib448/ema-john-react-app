@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import "./Shipment.css";
 import { UserContext } from "../../App";
@@ -6,19 +6,24 @@ import { getDatabaseCart, processOrder } from "../../utilities/databaseManager";
 import ProcessPayment from "../ProcessPayment/ProcessPayment";
 
 const Shipment = () => {
-  const [loggedInUser, setLoggedInUser] = useContext(UserContext);
-  console.log(loggedInUser);
-
   const { register, handleSubmit, watch, errors } = useForm();
+  const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+  const [shippingData, setShippingData] = useState(null);
+
   const onSubmit = (data) => {
+    setShippingData(data);
+  };
+
+  const handlePaymentSuccess = (paymentId) => {
     const savedCart = getDatabaseCart();
     const orderDetails = {
       ...loggedInUser,
       products: savedCart,
-      shipment: data,
+      paymentId,
+      shipment: shippingData,
       orderTime: new Date(),
     };
-    console.log(orderDetails);
+    // console.log(orderDetails);
     fetch("https://sleepy-stream-14756.herokuapp.com/addOrder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -33,12 +38,12 @@ const Shipment = () => {
       });
   };
 
-  console.log(watch("example")); // watch input value by passing the name of it
+  // console.log(watch("example")); // watch input value by passing the name of it
 
   return (
     <>
       <div className="row">
-        <div className="col-md-6">
+        <div className={`col-md-6 ${shippingData ? "d-none" : "d-block"}`}>
           <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
             <input
               name="name"
@@ -65,7 +70,7 @@ const Shipment = () => {
             <input type="submit" />
           </form>
         </div>
-        <div className="col-md-6">
+        <div className={`col-md-6 ${shippingData ? "d-block" : "d-none"}`}>
           <h1>Please pay for me</h1>
           <ProcessPayment />
         </div>
