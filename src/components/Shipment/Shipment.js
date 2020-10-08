@@ -72,7 +72,7 @@ const Shipment = () => {
         </div>
         <div className={`col-md-6 ${shippingData ? "d-block" : "d-none"}`}>
           <h1>Please pay for me</h1>
-          <ProcessPayment />
+          <ProcessPayment handlePaymentSuccess={handlePaymentSuccess} />
         </div>
       </div>
     </>
