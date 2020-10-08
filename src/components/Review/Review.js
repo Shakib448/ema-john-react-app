@@ -35,7 +35,7 @@ const Review = () => {
 
     const productKeys = Object.keys(saveCart); // Product keys
 
-    fetch("http://localhost:5000/productsByKeys", {
+    fetch("https://sleepy-stream-14756.herokuapp.com/productsByKeys", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(productKeys),

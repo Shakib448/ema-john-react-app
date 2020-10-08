@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import "./Shipment.css";
 import { UserContext } from "../../App";
 import { getDatabaseCart, processOrder } from "../../utilities/databaseManager";
+import ProcessPayment from "../ProcessPayment/ProcessPayment";
 
 const Shipment = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -18,7 +19,7 @@ const Shipment = () => {
       orderTime: new Date(),
     };
     console.log(orderDetails);
-    fetch("http://localhost:5000/addOrder", {
+    fetch("https://sleepy-stream-14756.herokuapp.com/addOrder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(orderDetails),
@@ -32,32 +33,44 @@ const Shipment = () => {
       });
   };
 
+  console.log(watch("example")); // watch input value by passing the name of it
+
   return (
-    <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
-      <input
-        name="name"
-        defaultValue={loggedInUser.name}
-        placeholder="Your name please"
-        ref={register({ required: true })}
-      />
-      {errors.name && <span className="error">Name is required</span>}
+    <>
+      <div className="row">
+        <div className="col-md-6">
+          <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
+            <input
+              name="name"
+              defaultValue={loggedInUser.name}
+              placeholder="Your name please"
+              ref={register({ required: true })}
+            />
+            {errors.name && <span className="error">Name is required</span>}
 
-      <input
-        defaultValue={loggedInUser.email}
-        name="email"
-        ref={register({ required: true })}
-      />
-      {errors.name && <span className="error">Email is required</span>}
+            <input
+              defaultValue={loggedInUser.email}
+              name="email"
+              ref={register({ required: true })}
+            />
+            {errors.name && <span className="error">Email is required</span>}
 
-      <input
-        placeholder="Your address"
-        name="address"
-        ref={register({ required: true })}
-      />
-      {errors.name && <span className="error">Address is required</span>}
+            <input
+              placeholder="Your address"
+              name="address"
+              ref={register({ required: true })}
+            />
+            {errors.name && <span className="error">Address is required</span>}
 
-      <input type="submit" />
-    </form>
+            <input type="submit" />
+          </form>
+        </div>
+        <div className="col-md-6">
+          <h1>Please pay for me</h1>
+          <ProcessPayment />
+        </div>
+      </div>
+    </>
   );
 };
 
